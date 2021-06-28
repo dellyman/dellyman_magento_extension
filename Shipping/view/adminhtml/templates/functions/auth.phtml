@@ -1,0 +1,15 @@
+<?php
+    $objectManager = \Magento\Framework\App\ObjectManager::getInstance();
+    $resource = $objectManager->get('Magento\Framework\App\ResourceConnection');
+    $connection = $resource->getConnection();
+    $tableName = $resource->getTableName('dellyman_shipping');
+    $query = "SELECT * FROM ". $tableName;
+    $check = $connection->fetchAll($query);    
+    if (!empty($check)) {
+       $email = $check[0]['email'];
+       $password = $check[0]['password'];
+    }else{
+        $email = $password = "";
+    }
+
+?>

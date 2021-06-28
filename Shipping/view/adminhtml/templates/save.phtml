@@ -1,0 +1,56 @@
+<?php include("functions/auth.phtml"); ?>
+<h3>If you do not have an account with.<a href="https://dellyman.com/sign-in"> Click here</a></h3>
+<div class="label">
+    <div id="message"></div>
+    <form action="<?php $_SERVER["PHP_SELF"]; ?>" id="save" method="post">
+        <div class="form-control">
+            <p>Enter your e-mail address</p>
+            <input type="email" class="form" name="email" value="<?php echo $email;  ?>" id="email" placeholder="E-mail" autocomplete="on">
+        </div>
+        <div class="form-control">
+            <p>Enter your password</p>
+            <input type="password" name="password" id="password" value="<?php echo $password;  ?>" class="form" placeholder="Password" autocomplete="on">
+        </div>
+        <div class="form-control">
+            <!-- <input type="submit"   value=""> -->
+            <button type="submit"class="btn" id="submit">Save Credentials</button>
+        </div>
+    </form>
+</div>
+<script>
+require(['jquery'],function(){
+    jQuery(document).ready(function() {
+        let alert = jQuery("#message")
+        jQuery("#save").submit(function(e){
+            e.preventDefault();
+            var email = jQuery("#email").val();
+            var password = jQuery("#password").val();
+            console.log(email+password);
+            if (email == "" || password == "") {
+                alert.html('<div class="alert error">Fill the form</div>'); 
+                setMyTimeout(alert);    
+            }else{
+                jQuery('#submit').html('<div class="loader-small"></div> Saving..');
+                jQuery.post("<?php echo $block->getUrl('store/storedata') ?>",
+                    {
+                         email: email,
+                             password: password
+                    },
+                    function (data, status) {
+                        alert.html('<div class="alert '+ data.style +'">'+ data.message + '</div>');
+                        setMyTimeout(alert); 
+                        if (status == "success" ) {_
+                            jQuery('#submit').html('Save Credentials');
+                        }
+                });
+            }
+        });
+        function setMyTimeout(data) {
+            setTimeout(() => {
+                    data.empty();
+                }, 2000);
+        }
+        return false;
+        });
+    });
+</script>

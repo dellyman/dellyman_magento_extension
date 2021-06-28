@@ -1,0 +1,334 @@
+h3{
+    margin-bottom:5px
+}
+.label{
+    margin:50px 0;
+}
+.btn{
+    background: #373330;
+    color: #fff;
+    padding: 10px 20px;
+    outline: none;
+    border: none;
+    box-shadow: 1px 0px 5px 1px #716d6d;
+    border-radius:5px;
+}
+select{
+    padding: 10px;
+    width: 60%;
+    margin: 8px 0;
+    border-radius: 5px;
+    border: 2px solid #98928e;
+}
+.form-input{
+    padding: 10px;
+    display: inline;
+    width: 60%;
+    margin: 8px 0;
+    border-radius: 5px;
+    border: 2px solid #98928e;
+}
+.label{
+    margin:50px 0;
+}
+.form{
+    display: block;
+    padding: 10px;
+    width: 60%;
+    margin: 8px 0;
+    border-radius: 5px;
+    border: 2px solid #98928e;
+}
+a{
+    color: #ef672f;
+}
+a:hover{
+    text-decoration:none;
+    color: #373330;
+}
+.form-control{
+    margin: 20px 0;
+}
+.btn{
+    background: #373330;
+    color: #fff;
+    padding: 10px 20px;
+    outline: none;
+    border: none;
+    box-shadow: 1px 0px 5px 1px #716d6d;
+    border-radius:5px;
+}
+.alert{
+padding: 20px;
+font-weight: bold;
+width: 77%;
+}
+.error{
+    background-color: #901b1b;
+    color: rgb(255 255 255 / 74%);
+}
+.success{
+    background-color: #2f901b;
+    color: rgb(255 255 255 / 74%);
+}
+.loader-small {
+  border: 5px solid #373330;
+  border-radius: 50%;
+  border-top: 5px solid #f3f3f3;
+  width: 20px;
+  height: 20px;
+  -webkit-animation: spin 2s linear infinite; /* Safari */
+  animation: spin 2s linear infinite;
+}
+.loader-small:hover{
+ border: 5px solid #f3f3f3;
+  border-radius: 50%;
+  border-top: 5px solid #373330;
+
+}
+
+/* Safari */
+@-webkit-keyframes spin {
+  0% { -webkit-transform: rotate(0deg); }
+  100% { -webkit-transform: rotate(360deg); }
+}
+
+@keyframes spin {
+  0% { transform: rotate(0deg); }
+  100% { transform: rotate(360deg); }
+}
+.mute{
+    color:#dad5d2 !important;
+}
+    .mute{
+    color: #bbb6b3 !important;
+    }
+    .mute h3{
+    color: #bbb6b3 !important;
+    }
+    #submit:disabled{
+        background:#bdb2aa; 
+        color:#e8dddd;
+    }
+    table{
+        width: 60%
+    }
+    td, th {
+        padding: 10px 0px;
+    }
+    #products h3 {
+        margin-top: 15px;
+    }
+.switch {
+  position: relative;
+  display: inline-block;
+}
+.switch-input {
+  display: none;
+}
+.switch-label {
+  display: block;
+  width: 48px;
+  height: 24px;
+  text-indent: -150%;
+  clip: rect(0 0 0 0);
+  color: transparent;
+  user-select: none;
+}
+.switch-label::before,
+.switch-label::after {
+  content: "";
+  display: block;
+  position: absolute;
+  cursor: pointer;
+}
+.switch-label::before {
+  width: 100%;
+  height: 100%;
+  background-color: #dedede;
+  border-radius: 9999em;
+  -webkit-transition: background-color 0.25s ease;
+  transition: background-color 0.25s ease;
+}
+.switch-label::after {
+  top: 0;
+  left: 0;
+  width: 24px;
+  height: 24px;
+  border-radius: 50%;
+  background-color: #fff;
+  box-shadow: 0 0 2px rgba(0, 0, 0, 0.45);
+  -webkit-transition: left 0.25s ease;
+  transition: left 0.25s ease;
+}
+.switch-input:checked + .switch-label::before {
+  background-color: #89c12d;
+}
+.switch-input:checked + .switch-label::after {
+  left: 24px;
+}
+.form-input{
+    padding: 10px;
+    display: inline;
+    width: 30%;
+    margin: 8px 0;
+    margin-right: 7px;
+    border-radius: 5px;
+    border: 1px solid #98928e;
+}
+.btn{
+    background: #373330;
+    color: #fff;
+    padding: 10px 20px;
+    outline: none;
+    border: none;
+    box-shadow: 1px 0px 5px 1px #716d6d;
+    border-radius:5px;
+}
+.text-error{
+    color:red;
+}
+.text-success{
+    color:#54b754;
+}
+.modal{
+    width: 516px;
+    padding: 20px;
+    margin-left: 320px;
+    margin-top: 140px;
+    background: white;
+    border-radius: 10px;
+}
+.modal-info{
+    margin: auto;
+    text-align: center;
+    box-shadow: 1px 0px 5px 1px #716d6d;
+    border-radius: 6px;
+    padding: 40px;
+}
+.backdrop{
+    top: 0;
+    position: fixed;
+    background: rgb(255 255 255 / 90%);
+    width: 100%;
+    height: 100%;
+    z-index: 99;   
+    display:none;
+}
+.actions{
+  padding: 0.5em;
+}
+.actions a {
+    padding: 10px;
+    border: 2px solid aqua;
+    color: darkslategray;
+    text-decoration: none;
+    margin: 10px;
+    border-radius: 10px;
+}
+.actions a:hover {
+    background-color: cyan;
+    color: white;
+    transition-delay: 10ms;
+}
+.loader{
+ display: none;
+ align-content: center;
+ justify-content: center;
+}
+.loader-text{
+    position: absolute;
+    top: 56%;
+    left: 38%;
+    color: #373330;
+}
+.d-flex{
+    display: flex;
+}
+.lds-roller {
+    display: inline-block;
+    position: absolute;
+    top: 40%;
+    left: 40%;
+    width: 80px;
+    height: 80px;
+    background: #ffffff;
+}
+.lds-roller div {
+  animation: lds-roller 1.2s cubic-bezier(0.5, 0, 0.5, 1) infinite;
+  transform-origin: 40px 40px;
+}
+.lds-roller div:after {
+  content: " ";
+  display: block;
+  position: absolute;
+  width: 7px;
+  height: 7px;
+  border-radius: 50%;
+  background: #373330;
+  margin: -4px 0 0 -4px;
+}
+.lds-roller div:nth-child(1) {
+  animation-delay: -0.036s;
+}
+.lds-roller div:nth-child(1):after {
+  top: 63px;
+  left: 63px;
+}
+.lds-roller div:nth-child(2) {
+  animation-delay: -0.072s;
+}
+.lds-roller div:nth-child(2):after {
+  top: 68px;
+  left: 56px;
+}
+.lds-roller div:nth-child(3) {
+  animation-delay: -0.108s;
+}
+.lds-roller div:nth-child(3):after {
+  top: 71px;
+  left: 48px;
+}
+.lds-roller div:nth-child(4) {
+  animation-delay: -0.144s;
+}
+.lds-roller div:nth-child(4):after {
+  top: 72px;
+  left: 40px;
+}
+.lds-roller div:nth-child(5) {
+  animation-delay: -0.18s;
+}
+.lds-roller div:nth-child(5):after {
+  top: 71px;
+  left: 32px;
+}
+.lds-roller div:nth-child(6) {
+  animation-delay: -0.216s;
+}
+.lds-roller div:nth-child(6):after {
+  top: 68px;
+  left: 24px;
+}
+.lds-roller div:nth-child(7) {
+  animation-delay: -0.252s;
+}
+.lds-roller div:nth-child(7):after {
+  top: 63px;
+  left: 17px;
+}
+.lds-roller div:nth-child(8) {
+  animation-delay: -0.288s;
+}
+.lds-roller div:nth-child(8):after {
+  top: 56px;
+  left: 12px;
+}
+@keyframes lds-roller {
+  0% {
+    transform: rotate(0deg);
+  }
+  100% {
+    transform: rotate(360deg);
+  }
+}

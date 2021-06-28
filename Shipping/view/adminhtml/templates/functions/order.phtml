@@ -1,0 +1,8 @@
+<?php
+    $objectManager = \Magento\Framework\App\ObjectManager::getInstance();
+    $resource = $objectManager->get('Magento\Framework\App\ResourceConnection');
+    $connection = $resource->getConnection();
+    $tableName = $resource->getTableName('sales_order');
+    $query = "SELECT increment_id,entity_id,created_at FROM ". $tableName;
+    $orders = $connection->fetchAll($query);    
+?>

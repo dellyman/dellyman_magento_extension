@@ -1,0 +1,14 @@
+<?xml version="1.0"?>
+<page xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="urn:magento:framework:View/Layout/etc/page_configuration.xsd">
+    <head>
+        <title>Send pickup request to Dellyman</title>
+        <css src="Dellyman_Shipping::css/style.css"/>
+        <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"/>
+        <script src="Dellyman_Shipping::js/main.js"/>
+    </head>
+    <body>
+        <referenceContainer name="content">
+            <block class="Magento\Backend\Block\Template" template="Dellyman_Shipping::pickup.phtml"/>
+        </referenceContainer>
+    </body>
+</page>

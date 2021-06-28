@@ -1,0 +1,17 @@
+{
+    "name": "dellyman/shipping",
+    "description": "Ship your products around Nigeria",
+    "type": "magento2-module",
+    "version": "1.0.0",
+    "license": [
+      "MIT"
+    ],
+    "autoload": {
+      "psr-4": {
+        "Dellyman\\Shipping\\": ""
+      },
+      "files": [
+        "registration.php"
+      ]
+    }
+  }

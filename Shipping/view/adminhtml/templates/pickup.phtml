@@ -1,0 +1,240 @@
+<?php 
+include("functions/carrier.phtml"); 
+include("functions/order.phtml"); 
+//include("functions/login.phtml"); 
+
+?>
+<div id="message"></div>
+<form action="" id="send-request" method="post">
+<div class="label">
+    <h3>Step 1: Select Order</h3>
+    <p>Only orders with the payment status of PAID and fulfulment status of AWAITING PROCESSING or PROCESSING will be listed below.</p>
+    <select name="order" id="order">
+        <option value="order">Select order</option>
+        <?php foreach ($orders as $key => $order) {?>
+            <option value="<?php echo $order['entity_id'] ?>"><?php echo "#".$order['increment_id']."  ".date("F j, Y, g:i a",strtotime($order['created_at'])); ?></option>
+        <?php } ?>  
+    </select>
+</div>
+<div class="label mute">
+    <h3>Step 2: Pick product(s) from the order to ship</h3>
+    <div id="products" >Select an order above, to enable you pick product(s) to ship.</div>
+</div>
+<div class="label mute">
+    <h3>Step 3: Select a carrier</h3>
+    <select name="carrier" id="carrier"disabled >
+        <option value="carrier">Select Carrier</option> 
+        <?php foreach ($carriers as $key => $carrier) {?>
+            <option value="<?php echo $carrier['Name'] ?>"><?php echo $carrier['Name'] ?></option> 
+       <?php } ?> 
+    </select>
+</div>
+<div class="label">
+    <button type="button"class="btn" onclick="confirm()" id="submit" disabled>Request Pickup</button>
+</div>
+</form>
+<div class="backdrop" id="overlay">
+	<div class="loader">
+		<div class="lds-roller"><div></div><div></div><div></div><div></div><div></div><div></div><div></div><div></div>
+		</div>
+		<span class="loader-text"> Sending pickup request</span>																	
+	</div>
+	<div class="modal" id="modal" >
+		<div class="modal-info text-center" id="modal-info">
+			<h1>Are you sure?</h1>
+			<p>You want to ship these items</p>
+			<button class="btn btn-primary btn-medium" name="send" value="send" form="send-request">Yes</button>
+			<button class="btn btn-danger btn-medium"onclick="confirm()">No</button>
+			<div class="actions">
+			</div>														
+		</div>																	
+	</div>
+</div> 
+<script>
+function formatToCurrency(amount){
+    return parseFloat(amount).toFixed(2).replace(/\d(?=(\d{3})+\.)/g, '$&,'); 
+}
+    require(['jquery'], function () {
+    jQuery(document).ready(function () {
+        jQuery("#order").change(function () {
+            let orderID = jQuery("#order").val();
+            if (orderID == "order") {
+                jQuery("#products").html("");
+                jQuery(".label").addClass("mute");
+                jQuery(".label").first().removeClass("mute");
+                jQuery("#products").html("<span class='spacing--mr1'>Select an order first load in products in the order selected</span>");
+                jQuery("#carrier").attr("disabled", true);
+            } else {
+                jQuery(".label").removeClass("mute");
+                jQuery("#products").html("");
+                jQuery("#products").css("margin-bottom", "15px")
+                jQuery("#products").append("Loading products.....");
+                jQuery.post("<?php echo $block->getUrl('get/getorder') ?>",
+                    {
+                        order: orderID,
+                    },
+                    function (data, status) {
+                        // alert("Data: " + data + "\nStatus: " + status);
+                        let orderItems = data.orderItems;
+                        let table = '<h3>' + orderItems.length + ' item(s) in the order </h3>' +
+                            '<table>' +
+                            '<thead>' +
+                            '<tr>' +
+                            '<td>Name</td>' +
+                            '<td>SKU</td>' +
+                            '<td>Amount</td>' +
+                            '</tr>' +
+                            '</thead>' +
+                            '<tbody id="order-items"></tbody></table>';
+                        jQuery("#products").html(table);
+                        for (let i = 0; i < orderItems.length; i++) {
+                            let orderItem = orderItems[i];
+                            remainingQty = Math.floor(orderItem.qty_ordered) - Math.floor(orderItem.qty_shipped);
+                            if (remainingQty >= 0) {
+                                qty = remainingQty;
+                                orderItem.qty_ordered = remainingQty;
+                            }else {
+                                qty = Math.floor(orderItem.qty_ordered); 
+                            }
+                            let StringOrders = JSON.stringify(orderItem);
+                            if (qty > 0) {
+                                checkbox = "<div class='switch'><input id='switch-" + i + "' type='checkbox' name='products[]'  onclick='changeQty(" + i +","+ Math.floor(orderItem.qty_ordered) + ")'  value='" + StringOrders + "' class='switch-input'/>" +
+                                '<label for="switch-' + i + '" class="switch-label">Switch</label>' +
+                                '</div>';
+                            }else{
+                                checkbox =  "All items have been shipped"
+                            }
+                            let newItems = "<tr><td id=item-"+ i +"><p>" + orderItem.name + "</p>" +
+                               checkbox +'</td>' +
+                                '<td>' + orderItem.sku + ' </td>' +
+                                '<td>' + qty + ' x &#8358; ' + formatToCurrency(orderItem.price) + '</td></tr>';
+                            jQuery("#order-items").append(newItems);
+                        }
+                    });
+            }
+
+        });
+    });
+});
+    function changeQty(key,qty) {
+       require(['jquery'], function () {
+           let checkbox = jQuery("#switch-" + key);
+            if (checkbox.is(':checked')) {
+               let input = '<div id="div-'+ key +'"><input type="number" class="form-input" min="1" max="'+ qty +'" placeholder="Quantity" id="input-'+ key +'"/><button type="button" onclick="update('+ key + ',' + qty +')" class="btn" id="update-'+ key +'">Update</button><p id=error-'+ key + '></p></div>';
+               jQuery("#item-"+key).append(input);
+            } else {
+                jQuery('#div-'+ key).remove();
+                jQuery('#remQty-'+ key).remove();
+                let ProductInfo = JSON.parse(jQuery("#switch-" + key).val());
+                ProductInfo.qty_shipped = 0.0000;
+                let productString = JSON.stringify(ProductInfo)
+                jQuery("#switch-" + key).val(productString);
+            }
+       });
+    }
+
+    function update(key,qty) {
+         require(['jquery'], function () {
+             let shippedQty = parseInt(jQuery("#input-"+ key ).val());
+             if (shippedQty == 0 || shippedQty == "") {
+                 jQuery("#error-" + key).html('<div class="text-error">Quantity cannot be empty</div>');
+             }
+             else if(shippedQty < 0){
+                 jQuery("#error-" + key).html('<div class="text-error">Quantity cannot be negative</div>');
+             }
+             else if(isNaN(shippedQty)){
+                 jQuery("#error-" + key).html('<div class="text-error">Only integers are accepted </div>');
+             }
+             else if(shippedQty > qty){
+                 jQuery("#error-"+key).html('<div class="text-error">Shipping quantity is more than order quantity</div>');
+             }else{
+                  remainingQty = qty - shippedQty;
+                  let feedback = '<p  id="remQty-'+ key + '"  class="text-success" >'+ shippedQty + ' quantity(es) will be shipped</p>';
+                  let ProductInfo = JSON.parse(jQuery("#switch-"+key).val());
+                  ProductInfo.qty_shipped = parseInt(shippedQty)+'.0000';
+                  let productString = JSON.stringify(ProductInfo);
+                  jQuery("#switch-" + key).val(productString);
+                  jQuery('#div-'+ key).remove();
+                  jQuery("#item-"+key).append(feedback);
+             }
+         });
+    }
+    function confirm() {
+        require(['jquery'], function () {
+            if (jQuery('#overlay').css('display') == "none"){
+                 jQuery("#overlay").css("display", "block");
+            }else{
+                jQuery("#overlay").css("display", "none");
+            }
+        });
+    }
+   require(['jquery'], function () {
+        jQuery(document).on("mousemove touchstart touchend",function () {
+        let order = jQuery("#order").val();
+        let checkboxes = new Array();
+        let allShippingQty = new Array();
+        jQuery("input:checkbox[name='products[]']:checked").each(function () {
+            checkboxes.push(jQuery(this).val())
+            let shipqty = JSON.parse(jQuery(this).val());
+            if (shipqty.qty_shipped > 0) {
+                allShippingQty.push(shipqty.qty_shipped);
+            } else {}
+        });
+        if (checkboxes.length != 0 && allShippingQty.length !=0 && checkboxes.length == allShippingQty.length) {
+            jQuery("#carrier").removeAttr("disabled");
+        } else {
+            jQuery("#carrier").attr("disabled", true);
+        }
+        let carrier = jQuery("#carrier").val();
+        if (order != "order" && checkboxes.length != 0 && allShippingQty.length != 0 && checkboxes.length == allShippingQty.length && carrier != "carrier") {
+            jQuery("#submit").removeAttr("disabled");
+        } else {
+            jQuery("#submit").attr("disabled", true);
+         }
+    });
+    jQuery("#send-request").submit(function(e) {
+         e.preventDefault();
+         jQuery("#modal").css("display", "none");
+         jQuery(".loader").addClass("d-flex");
+
+        //Assignnig variable
+        let order = jQuery("#order").val();
+        let carrier = jQuery("#carrier").val();
+        let checkboxes = new Array();
+        jQuery("input:checkbox[name='products[]']:checked").each(function () {
+            checkboxes.push(jQuery(this).val())
+        });
+        let send = "send";
+        let alert = jQuery("#message")
+        jQuery.post("<?php echo $block->getUrl('send/sendorder'); ?>",
+            {
+                order: order,
+                products: checkboxes,
+                carrier: carrier,
+                send: send
+            },
+            function (data, status) {
+                //alert("Data: " + data + "\nStatus: " + status);
+                alert.html('<div class="alert '+ data.style +'">'+ data.feedback + '</div>');
+                if (status == "success" ) {
+                    jQuery(".loader").removeClass("d-flex");
+                    jQuery("#modal").css("display", "block");
+                    jQuery("#overlay").css("display", "none");
+                    jQuery(".label").addClass("mute");
+                    jQuery("#products").html("<span class='spacing--mr1'>Select an order first load in products in the order selected</span>");
+                    jQuery("#carrier").attr("disabled", true);
+                    jQuery("#send-request")[0].reset();
+                    jQuery(".label").first().removeClass("mute");  
+                    jQuery("#alert").html(data);     
+                    // animated top scrolling
+                    jQuery('body, html').animate({ scrollTop: 0 });
+                    setTimeout(() => {
+                        $("#alert").empty();
+                    }, 20000);
+                }
+            });
+
+    });
+   });
+
+</script>
