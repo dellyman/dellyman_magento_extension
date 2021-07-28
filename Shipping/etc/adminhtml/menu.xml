@@ -4,5 +4,6 @@
         <add id="Dellyman_Shipping::shipping" module="Dellyman_Shipping" sortOrder="20" resource="Dellyman_Shipping::shipping" title="Dellyman Shipping"/>
         <add id="Dellyman_Shipping::save" title="Connect to Dellyman" module="Dellyman_Shipping" sortOrder="10" action="dellyman/save" parent="Dellyman_Shipping::shipping" resource="Dellyman_Shipping::save"/>
         <add id="Dellyman_Shipping::pickup" title="Send pickup request" module="Dellyman_Shipping" sortOrder="10" action="shipping/pickup" parent="Dellyman_Shipping::shipping"  resource="Dellyman_Shipping::pickup"/>
+        <add id="Dellyman_Shipping::delivery" title="Delivery Status" module="Dellyman_Shipping" sortOrder="10" action="delivery/status" parent="Dellyman_Shipping::shipping"  resource="Dellyman_Shipping::delivery"/>
     </menu>
 </config>

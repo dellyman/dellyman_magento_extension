@@ -7,6 +7,9 @@
         <route id="dellyman" frontName="dellyman">
             <module name="Dellyman_Shipping"/>
         </route>
+        <route id="delivery" frontName="delivery">
+            <module name="Dellyman_Shipping"/>
+        </route>
         <route id="store" frontName="store">
             <module name="Dellyman_Shipping"/>
         </route>

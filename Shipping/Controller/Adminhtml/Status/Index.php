@@ -1,5 +1,5 @@
 <?php
-namespace Dellyman\Shipping\Controller\Adminhtml\Pickup;
+namespace Dellyman\Shipping\Controller\Adminhtml\Status;
 
 class Index extends \Magento\Backend\App\Action
 {

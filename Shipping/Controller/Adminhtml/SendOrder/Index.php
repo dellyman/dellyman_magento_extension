@@ -102,7 +102,7 @@ class Index extends \Magento\Backend\App\Action
             'AccountNumber' => "",
             'IsProductInsurance' => 0,
             'InsuranceAmount' => 0,
-            'PickUpContactName' => "Jason",
+            'PickUpContactName' => "Magento",
             'PickUpContactNumber' => "09035276989",
             'PickUpGooglePlaceAddress' => "Ikorodu  Rd" ,
             'PickUpLandmark' => "Mobile",	
@@ -142,20 +142,30 @@ class Index extends \Magento\Backend\App\Action
         curl_close($curl);
         if ($response['ResponseCode'] == 100 ) {
             //Update Quantities
+            $dellyman_orderid = $response['OrderID'];
+            $Reference = $response['Reference'];
+            $JsonShippedProducts = json_encode($shipProducts,true);
             foreach ($shipProducts as $key => $updateProduct) {
                 //looking foa a variable
                 $productId = $updateProduct['product_id'];
+                $sku = strval($updateProduct['sku']);
                 $tableName = $connection->getTableName('sales_order_item');
-                $query = "SELECT qty_shipped FROM ". $tableName ." WHERE product_id =".$productId." AND order_id =".$orderId;
+                $query = "SELECT qty_shipped FROM ". $tableName ." WHERE product_id =".$productId." AND order_id =".$orderId." AND price != 0";
                 $oldqty = $this->resourceConnection->getConnection()->fetchAll($query); 
                 $qty = $oldqty[0]['qty_shipped'] + $updateProduct['qty_shipped'] ;
                 $connection = $this->resourceConnection->getConnection();
                 $tableName = $connection->getTableName('sales_order_item');
-                $query = "UPDATE ". $tableName ." SET qty_shipped = ". $qty ." WHERE product_id =".$productId." AND order_id =".$orderId;
+                $query = "UPDATE ". $tableName ." SET qty_shipped = ". $qty ." WHERE product_id =".$productId." AND order_id =".$orderId." AND price != 0";
                 $connection->query($query); 
-            }           
+            }
+            $connection = $this->resourceConnection->getConnection();
+            $tableName = $connection->getTableName('dellyman_shipping_orders');
+            date_default_timezone_set('Africa/Lagos');
+            $today = date("Y-m-d H:i:s"); 
+            $query = "INSERT INTO ". $tableName ." (order_id,dellyman_order_id,products_shipped,reference_id,created_at) VALUES ('$orderId','$dellyman_orderid','$JsonShippedProducts','$Reference','$today')";
+            $connection->query($query); 
             $style = "success";
-            $feedback = "Sucessfully sent #".$orderId." to dellyman, we will be coming for the pickup later in the day."."The Delivery ID is ".$response['Reference'];
+            $feedback = "Sucessfully sent #".$orderId." to dellyman, we will be coming for the pickup later in the day."."The Delivery ID is ".$Reference;
         }
         else{
             $style = "error";
